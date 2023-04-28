@@ -2,7 +2,7 @@ import os
 from glob import glob
 from setuptools import setup
 
-package_name = 'image_processing'
+package_name = 'camera_service'
 
 setup(
     name=package_name,
@@ -23,7 +23,7 @@ setup(
     tests_require=['pytest'],
     entry_points={
         'console_scripts': [
-            'node = image_processing.image_processing_node:main'
+            'aruco_detection_node = camera_service.aruco_detection_node:main'
         ],
     },
 )
