@@ -15,13 +15,16 @@ def generate_launch_description():
                 "pixel_format": "yuyv",
                 "camera_info_url": "package://camera_driver/config/img.yaml",
             }],
+            remappings=[
+               ("image_raw", "/camera/image_raw"),
+            ],
             name="camera"
         ),
         Node(
             package="usb_cam",
             executable="show_image.py",
             remappings=[
-               ("image", "camera/image_raw"),
+               ("image_raw", "/camera/image_raw"),
             ],
             output="screen",
             emulate_tty=True,

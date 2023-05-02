@@ -36,28 +36,27 @@ class ImageProcessingNode(Node):
     def __init__(self):
         super().__init__('image_processing_node')
         
-        # Declare and read parameters [Aruco Marker Parameters & Camera Parameters]
-        self.declare_parameter('image_topic', '/image_raw')
+        # Declare and read parameters [Camera Parameters]
+        self.declare_parameter('image_topic', '/camera/image_raw')
         self.declare_parameter('camera_info_topic', '/camera_info')
         self.declare_parameter('camera_frame', None)
 
-        # Declaration of Parameter for Simulation: Default: False
+        # Assign Parameters
         image_topic = self.get_parameter('image_topic').get_parameter_value().string_value
         info_topic = self.get_parameter('camera_info_topic').get_parameter_value().string_value
         self.camera_frame = self.get_parameter('camera_frame').get_parameter_value().string_value
 
-        # Subscriptions - Camera Info & Marker Detection, Pose Estimation
+        # Subscriptions - Camera Info & Image
         self.info_sub = self.create_subscription(CameraInfo, info_topic, self.info_callback, qos_profile_sensor_data)
         self.image_sub = self.create_subscription(Image, image_topic, self.image_callback, qos_profile_sensor_data)
         
-        # Publishers - Estimated Pose Array
+        # Publishers - Processed Image
         self.image_pub = self.create_publisher(Image, 'new_image', 10)
 
         # Camera Parameters Initialization
         self.info_msg = None
         self.intrinsic_mat = None
         self.distortion = None
-
         self.bridge = CvBridge()
 
     # Camera Info - Callback
@@ -66,15 +65,15 @@ class ImageProcessingNode(Node):
         self.intrinsic_mat = np.reshape(np.array(self.info_msg.k), (3, 3))
         self.distortion = np.array(self.info_msg.d)
 
-    # Marker Detection, Pose Estimation - Callback
+    # Image Processing - Callback
     def image_callback(self, img_msg):
         if self.info_msg is None:
             self.get_logger().warn('No camera info has been received!')
             return
 
         cv_image = self.bridge.imgmsg_to_cv2(img_msg, desired_encoding='mono8')
-        new_image = cv_image.flip()
-        new_image_msg = self.bridge.cv2_to_imgmsg(new_image, desired_encoding='mono8')
+        new_image = cv2.flip(cv_image, 0)
+        new_image_msg = self.bridge.cv2_to_imgmsg(new_image, encoding='mono8')
 
         self.image_pub.publish(new_image_msg)
 

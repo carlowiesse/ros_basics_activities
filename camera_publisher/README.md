@@ -9,7 +9,7 @@ source install/setup.bash
 ros2 launch camera_driver cam.launch.py
 ```
 
-Terminal 2: *(Image Publisher)*
+Terminal 2: *(Camera Publisher)*
 ```
 source /opt/ros/humble/setup.bash
 
@@ -18,14 +18,7 @@ source install/setup.bash
 ros2 run camera_publisher image_processing_node
 ```
 
-Terminal 3: *(Camera Viewer)*
-```
-source /opt/ros/humble/setup.bash
-
-ros2 run image_view image_view image:=/camera/image_raw
-```
-
-Terminal 4: *(Image Viewer)*
+Terminal 3: *(Image Viewer)*
 ```
 source /opt/ros/humble/setup.bash
 

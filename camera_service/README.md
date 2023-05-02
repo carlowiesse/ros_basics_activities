@@ -9,7 +9,7 @@ source install/setup.bash
 ros2 launch camera_driver cam.launch.py
 ```
 
-Terminal 2: *(Image Publisher)*
+Terminal 2: *(Camera Service)*
 ```
 source /opt/ros/humble/setup.bash
 
@@ -18,11 +18,11 @@ source install/setup.bash
 ros2 run camera_service aruco_detection_node
 ```
 
-Terminal 3: *(Camera Viewer)*
+Terminal 3: *(Image Viewer)*
 ```
 source /opt/ros/humble/setup.bash
 
-ros2 run image_view image_view image:=/camera/image_raw
+ros2 run image_view image_view image:=/aruco_detection
 ```
 
 Terminal 4: *(Service Request)*
